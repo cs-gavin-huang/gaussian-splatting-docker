@@ -1,8 +1,9 @@
 FROM nvidia/cuda:11.6.2-devel-ubuntu20.04
 
 # Install base utilities
+ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
-    && apt-get install -y build-essential wget ninja-build unzip \
+    && apt-get install -y build-essential wget ninja-build unzip libgl-dev ffmpeg\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -26,7 +27,8 @@ RUN conda env create -f environment.yml
 RUN conda init bash
 #RUN echo "conda activate gaussian_splatting" >> ~/.bashrc
 SHELL ["conda", "run", "-n", "gaussian_splatting", "/bin/bash", "-c"]
-RUN conda install jupyter colmap ffmpeg
+RUN conda install jupyter colmap
+RUN conda remove ffmpeg -y
 
 WORKDIR /root/
 
